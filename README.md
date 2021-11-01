@@ -44,7 +44,7 @@
 
 安装pip
 
-pip安装依赖包 pip -r requirments.txt
+pip安装依赖包 pip install -r requirments.txt
 
 项目目录下，运行python3 install_catch.py apk文件路径
 ```
