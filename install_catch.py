@@ -78,9 +78,9 @@ class Catch():
         return result.stdout.read().decode()
 
 
-def main(apk_path, dump_sql=True):
+def main(apk_path, app_category, dump_sql=True):
     apk_info = aapt.get_apk_info(apk_path)
-
+    apk_info['app_level_category'] = app_category
     catch = Catch(apk_info, apk_path)
 
     print('安装app ing。。。')

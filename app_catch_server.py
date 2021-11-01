@@ -21,10 +21,11 @@ def handle_client():
     data = json.loads(request.get_data())
     apkSerialNo = data['apkSerialNo'][0]
     apk_file_path = data["apkFilePath"][0]
+    app_level_category = data['app_category'][0]
     code = "0000"
     msg = "success"
     try:
-        install_catch.main(apk_file_path)
+        install_catch.main(apk_file_path, app_level_category)
     except Exception as e:
         print(e)
         code = "9999"

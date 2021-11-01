@@ -10,7 +10,8 @@ def fmt_catch_info(app_info, domain_list):
         app_package_name = app_info.get('package_name', ''),
         version = app_info.get('version_name', ''),
         domains = json.dumps(domain_list, ensure_ascii=False),
-        main_activity = app_info.get('app_activity', '')
+        main_activity = app_info.get('app_activity', ''),
+        app_level_category = app_info.get('app_level_category', '')
     )
     db_session.add(app_info)
     db_session.commit()

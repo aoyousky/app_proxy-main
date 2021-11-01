@@ -14,7 +14,7 @@ def batch_catch(file_path):
             currentFileName = os.path.basename(file)
             apkPath = file_path + "/" + currentFileName
             try:
-                install_catch.main(apkPath)
+                install_catch.main(apkPath, '')
             except Exception as e:
                 print(e)
 

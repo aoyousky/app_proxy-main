@@ -45,5 +45,6 @@ class AppCatchInfo(Base):
     version = Column(String(50), comment='version')
     domains = Column(TEXT, comment='domains')
     main_activity = Column(String(500), comment='main_activity')
+    app_level_category = Column(String(64), comment='app_level_category')
 
 Base.metadata.create_all(engine)
