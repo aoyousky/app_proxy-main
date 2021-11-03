@@ -7,6 +7,7 @@ import stat
 import aapt
 import sys
 import os
+import json
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(os.path.split(curPath)[0])[0]
 sys.path.append(rootPath)
@@ -131,7 +132,7 @@ def main(apk_path, app_category, dump_sql=True):
     print('输出结果：', domain_list)
     if dump_sql:
         fmt_catch_info(apk_info, domain_list)
-    return dump_sql
+    return json.dumps(domain_list, ensure_ascii=False)
     # rm_result = subprocess.getoutput('rm -rf ' + os.getcwd() + '/request')
     # print(rm_result)
 
