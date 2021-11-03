@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
+import json
+
 from format_data import fmt_catch_info
 import subprocess
+import os
 import platform
 import time
 import stat
 import aapt
 import sys
+import sys
 import os
-import json
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(os.path.split(curPath)[0])[0]
 sys.path.append(rootPath)
@@ -35,13 +38,13 @@ class Catch():
     def restart_adb(self):
         cmd_line = self.adb_path + ' kill-server'
         out = self.cmd_excute(cmd_line)
-        print(out)
+        return out
 
     def open_app(self, main_activity):
 
         cmd_line = self.adb_path + ' shell am start {}'.format(main_activity)
         out = self.cmd_excute(cmd_line)
-        print(out)
+        return out
 
     def stop_kill_app(self):
         cmd_line = self.adb_path + ' shell am force-stop ' + self.package_name
@@ -79,17 +82,20 @@ class Catch():
         return result.stdout.read().decode()
 
 
-def main(apk_path, app_category, dump_sql=True):
+def main(apk_path, apk_category='', dump_sql=True):
     apk_info = aapt.get_apk_info(apk_path)
-    apk_info['app_level_category'] = app_category
+    apk_info['app_level_category'] = apk_category
     catch = Catch(apk_info, apk_path)
 
     print('安装app ing。。。')
     catch.restart_adb()
-    instal_result = catch.install_app()
-    print(instal_result)
-    if 'error' in instal_result:
-        return
+    install_result = catch.install_app()
+    print(install_result)
+    if 'error' in install_result:
+        return {
+            'code': '0000',
+            'msg': '安装失败!'
+        }
     print('安装完成。。。')
     time.sleep(5)
     print('启动app ing。。。')
@@ -132,11 +138,19 @@ def main(apk_path, app_category, dump_sql=True):
     print('输出结果：', domain_list)
     if dump_sql:
         fmt_catch_info(apk_info, domain_list)
-    return json.dumps(domain_list, ensure_ascii=False)
+    return {
+        'code': '0000',
+        'msg': '成功',
+        'appName': apk_info.get('app_name', ''),
+        'appVersion': apk_info.get('version_name', ''),
+        'appPackageName': apk_info.get('package_name', ''),
+        'domains': json.dumps(domain_list, ensure_ascii=False)
+    }
     # rm_result = subprocess.getoutput('rm -rf ' + os.getcwd() + '/request')
     # print(rm_result)
 
 
 if __name__ == '__main__':
     apk_path = sys.argv[1]
-    main(apk_path)
+    apk_level_category = sys.argv[2]
+    main(apk_path, apk_level_category)

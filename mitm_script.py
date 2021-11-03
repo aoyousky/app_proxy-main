@@ -4,7 +4,7 @@ import json
 import os
 import re
 from urllib.parse import urlparse
-import hashlib
+import threading
 
 
 class HttpProxy:
@@ -18,6 +18,11 @@ class HttpProxy:
         self.extract_domain(flow)
 
     def http_connect(self, flow):
+        print('http', flow.request.url)
+        self.extract_domain(flow)
+
+    def request(self, flow):
+        print('request', flow.request.url)
         self.extract_domain(flow)
 
     def extract_domain(self, flow):
@@ -40,14 +45,12 @@ class HttpProxy:
                 host = host.split(':')[0]
             except KeyError as e:
                 print(e)
-            tmp = {
-                'host': host,
-                'ua': ua
-            }
-            str_host_ua = json.dumps(tmp)
-            md5_host_ua = hashlib.md5(str_host_ua.encode(encoding="utf-8")).hexdigest()
-            if md5_host_ua not in self.domain_set:
-                self.domain_set.add(md5_host_ua)
+            if host not in self.domain_set:
+                tmp = {
+                    'host': host,
+                    'ua': ua
+                }
+                self.domain_set.add(host)
                 self.info_list.append(tmp)
                 with open(self.path, 'w') as f:
                     f.write(json.dumps(self.info_list))
