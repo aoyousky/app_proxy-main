@@ -15,7 +15,17 @@
 ├── mitm_script.py        抓包文件
 ├── model.py              数据库模型
 ├── requirments.txt       依赖文件
-└── utils.py              
+├── utils.py                
+├── oppo                  oppo爬虫
+│   ├── __init__.py
+│   ├── crawler.py  爬虫启动入口
+│   ├── format_data.py 数据格式化
+│   └── uilts.py
+└── vivo                 vivo爬虫
+    ├── __init__.py
+    ├── crawler.py       爬虫启动入口
+    └── format_data.py   数据格式化
+
 
 ```
 ### 2、抓包运行
@@ -47,4 +57,10 @@
 pip安装依赖包 pip install -r requirments.txt
 
 项目目录下，运行python3 install_catch.py apk文件路径
+```
+
+### 爬虫运行
+到vivo或者oppo目录下运行
+```py
+python  crawler.py
 ```

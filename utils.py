@@ -2,9 +2,9 @@
 import requests, time
 import logging
 from logging import StreamHandler
-from botocore.exceptions import ClientError
 
 logger = logging.getLogger(__name__)
+
 
 def get_html(headers, url, method, data=None, retry_times=5, timeout=10, proxies=False):
     """

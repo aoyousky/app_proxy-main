@@ -8,6 +8,8 @@ import json
 
 import install_catch
 
+from oppo.uilts import download_save_apk
+
 app = Flask(__name__)
 
 '''
@@ -26,12 +28,32 @@ def handle_client():
     msg = "success"
     catch_result = ''
     try:
-      catch_result = install_catch.main(apk_file_path, app_level_category)
+        catch_result = install_catch.main(apk_file_path, app_level_category)
     except Exception as e:
         print(e)
         code = "9999"
         msg = "failed"
     response = {"apkSerialNo": apkSerialNo, "code": code, "msg": msg, "catch_result": catch_result}
+    return str(json.dumps(response, sort_keys=True, indent=4))
+
+
+'''
+oppo app download
+'''
+
+
+@app.route('/oppoAppDownload', methods=['POST'])
+def oppo_app_download():
+    data = json.loads(request.get_data())
+    download_path = data['download_path'][0]
+    download_url = data['download_url'][0]
+    file_name = download_save_apk(download_path, download_url)
+    code = "0000"
+    msg = "success"
+    if not file_name:
+        code = "9999"
+        msg = "failed"
+    response = {"code": code, "msg": msg}
     return str(json.dumps(response, sort_keys=True, indent=4))
 
 
