@@ -5,7 +5,6 @@ from flask import Flask
 from flask import request
 
 import json
-import asyncio
 
 import install_catch
 
