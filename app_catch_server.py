@@ -12,16 +12,17 @@ import install_catch
 from oppo.uilts import download_save_apk
 from oppo.crawler import oppo_start
 from vivo.crawler import vivo_start
-
+from concurrent.futures import ThreadPoolExecutor
 app = Flask(__name__)
 
-'''
-app catch host
-'''
+executor = ThreadPoolExecutor(2)
 
 
 @app.route('/appCatch', methods=['POST'])
 def handle_client():
+    """
+        app catch host
+    """
     # request load request data
     data = json.loads(request.get_data())
     apkSerialNo = data['apkSerialNo'][0]
@@ -40,43 +41,37 @@ def handle_client():
     return str(json.dumps(response, sort_keys=True, indent=4))
 
 
-'''
-oppo app-store spider via app_category
-'''
-
-
 @app.route('/oppoAppSpiderByCategory', methods=['POST'])
 def oppoAppSpiderByCategory():
+    """
+    oppo app-store spider via app_category
+    """
     data = json.loads(request.get_data())
     app_category_name = data['app_category_name'][0]
     # async execute oppo_start method
-    asyncio.run(oppo_start([app_category_name]))
+    executor.submit(oppo_start, [app_category_name])
     response = {"code": "0000", "msg": "oppo spider"}
     return str(json.dumps(response, sort_keys=True, indent=4))
 
 
-'''
-vivo app-store spider via app_category
-'''
-
-
 @app.route('/vivoAppSpiderByCategory', methods=['POST'])
 def vivoAppSpiderByCategory():
+    """
+    vivo app-store spider via app_category
+    """
     data = json.loads(request.get_data())
     app_category_name = data['app_category_name'][0]
     # async execute vivo_start method
-    asyncio.run(vivo_start([app_category_name]))
+    executor.submit(vivo_start, [app_category_name])
     response = {"code": "0000", "msg": "vivo spider"}
     return str(json.dumps(response, sort_keys=True, indent=4))
 
 
-'''
-oppo app download
-'''
-
-
 @app.route('/oppoAppDownload', methods=['POST'])
 def oppo_app_download():
+    """
+    oppo app download
+    """
     data = json.loads(request.get_data())
     download_path = data['download_path'][0]
     download_url = data['download_url'][0]
