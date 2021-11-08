@@ -67,5 +67,5 @@ def download_save_apk(save_path, apk_link):
     with open(save_path, 'wb') as f:
         f.write(apk_content)
         file_name = f.name
-    f.close()
+        f.close()
     return file_name

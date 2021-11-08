@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import json
 import random
 import time
@@ -7,14 +6,15 @@ import time
 import requests
 import sys
 import os
+
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(os.path.split(curPath)[0])[0]
 if 'app_proxy' not in rootPath:
     sys.path.append(rootPath + '/app_proxy')
 sys.path.append(rootPath)
-from oppo.format_data import fmt_data
-from utils import get_html
 from oppo.uilts import param_sign
+from utils import get_html
+from oppo.format_data import fmt_data
 
 headers = {
     'ch': '2101',
@@ -73,7 +73,7 @@ def app_detail(app_id):
     return r.text
 
 
-def oppo_start(cata_crawl_list=[]):
+def start():
     cate_info = get_all_catagory()
     if not cate_info:
         print('catagory get error')
@@ -87,10 +87,6 @@ def oppo_start(cata_crawl_list=[]):
     for card in cata_list:
         card1_id = card['id']
         card1_name = card['name']
-        if cata_crawl_list:
-            if card1_name not in cata_crawl_list:
-                print(card1_name + '|不在传入分类中，不采集！')
-                continue
         card1_int = card.get('subCategories', [])
         for card2 in card1_int:
             card2_id = card2['id']
@@ -101,8 +97,7 @@ def oppo_start(cata_crawl_list=[]):
                 app_info = get_category_app(card1_id, card2_id, page)
                 try:
                     app_list = json.loads(app_info)['cards']
-                    next_page = True if not json.loads(
-                        app_info)['isEnd'] else False
+                    next_page = True if not json.loads(app_info)['isEnd'] else False
                 except Exception as e:
                     print(e)
                     continue
@@ -122,5 +117,4 @@ def oppo_start(cata_crawl_list=[]):
 
 
 if __name__ == '__main__':
-    category_name = sys.argv[1]
-    oppo_start([category_name])
+    start()

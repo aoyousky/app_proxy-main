@@ -5,15 +5,18 @@ from flask import Flask
 from flask import request
 
 import json
+import asyncio
 
 import install_catch
 
 from oppo.uilts import download_save_apk
+from oppo.crawler import oppo_start
+from vivo.crawler import vivo_start
 
 app = Flask(__name__)
 
 '''
-app catch web服务
+app catch host
 '''
 
 
@@ -34,6 +37,36 @@ def handle_client():
         code = "9999"
         msg = "failed"
     response = {"apkSerialNo": apkSerialNo, "code": code, "msg": msg, "catch_result": catch_result}
+    return str(json.dumps(response, sort_keys=True, indent=4))
+
+
+'''
+oppo app-store spider via app_category
+'''
+
+
+@app.route('/oppoAppSpiderByCategory', methods=['POST'])
+def oppoAppSpiderByCategory():
+    data = json.loads(request.get_data())
+    app_category_name = data['app_category_name'][0]
+    # async execute oppo_start method
+    asyncio.run(oppo_start([app_category_name]))
+    response = {"code": "0000", "msg": "oppo spider"}
+    return str(json.dumps(response, sort_keys=True, indent=4))
+
+
+'''
+vivo app-store spider via app_category
+'''
+
+
+@app.route('/vivoAppSpiderByCategory', methods=['POST'])
+def vivoAppSpiderByCategory():
+    data = json.loads(request.get_data())
+    app_category_name = data['app_category_name'][0]
+    # async execute vivo_start method
+    asyncio.run(vivo_start([app_category_name]))
+    response = {"code": "0000", "msg": "vivo spider"}
     return str(json.dumps(response, sort_keys=True, indent=4))
 
 
