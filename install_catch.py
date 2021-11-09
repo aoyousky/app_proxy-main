@@ -11,6 +11,7 @@ import aapt
 import sys
 import sys
 import os
+
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(os.path.split(curPath)[0])[0]
 sys.path.append(rootPath)
@@ -63,8 +64,8 @@ class Catch():
 
     def get_all_activity(self):
         cmd_line = self.adb_path + \
-            ' shell dumpsys package | grep -i {}|grep Activity'.format(
-                self.package_name)
+                   ' shell dumpsys package | grep -i {}|grep Activity'.format(
+                       self.package_name)
         print(cmd_line)
         all_activity = self.cmd_excute(cmd_line)
         return all_activity
@@ -87,7 +88,7 @@ def main(apk_path, apk_category='', dump_sql=True):
     apk_info['app_level_category'] = apk_category
     catch = Catch(apk_info, apk_path)
 
-    print('安装app ing。。。')
+    print('安装 ', apk_info['app_name'], ' app ing。。。')
     catch.restart_adb()
     install_result = catch.install_app()
     print(install_result)
